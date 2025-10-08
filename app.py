@@ -1,4 +1,4 @@
-"""Streamlit UI scaffold for Sudoku and Killer Sudoku inputs."""
+"""Streamlit UI scaffold for Sudoku inputs."""
 from __future__ import annotations
 
 import re
@@ -56,20 +56,6 @@ st.markdown(
     .sudoku-cell::selection {
         background: #1abc9c;
         color: white;
-    }
-    .killer-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 0.15rem 0.6rem;
-        border-radius: 999px;
-        border: 1px solid rgba(231, 76, 60, 0.4);
-        background: rgba(231, 76, 60, 0.1);
-        color: #c0392b;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
     }
     div[data-testid="stNumberInput"] input,
     div[data-testid="stTextInput"] input {
@@ -199,15 +185,6 @@ def render_manual_input(default: Optional[Grid] = None) -> Grid:
     return captured
 
 
-SAMPLE_KILLER_PUZZLE = {
-    "grid": create_empty_grid(),
-    "cages": [
-        {"sum": 10, "cells": [(0, 0), (0, 1), (1, 0)]},
-        {"sum": 5, "cells": [(0, 2), (1, 1)]},
-        {"sum": 23, "cells": [(0, 3), (0, 4), (0, 5), (1, 3)]},
-        {"sum": 17, "cells": [(1, 2), (2, 2), (2, 3)]},
-    ],
-}
 CLASSIC_GENERATOR_SOURCE = "Generated • Classic • {difficulty} • Local generator"
 
 
@@ -217,8 +194,6 @@ def ensure_session_state() -> None:
         st.session_state["current_puzzle"] = None
     if "puzzle_source" not in st.session_state:
         st.session_state["puzzle_source"] = None
-    if "killer_cages" not in st.session_state:
-        st.session_state["killer_cages"] = None
 
 
 ensure_session_state()
@@ -226,7 +201,7 @@ ensure_session_state()
 
 # --- UI -------------------------------------------------------------------
 st.title("🧩 Sudoku Playground")
-st.caption("Prototype UI for classic & killer Sudoku inputs")
+st.caption("Prototype UI for classic Sudoku inputs")
 
 upload_tab, manual_tab, generate_tab = st.tabs([
     "Upload a puzzle",
@@ -249,7 +224,6 @@ with upload_tab:
         else:
             st.session_state["current_puzzle"] = puzzle_grid
             st.session_state["puzzle_source"] = f"Uploaded • {uploaded_file.name}"
-            st.session_state["killer_cages"] = None
             st.success("Nice! Scroll down to preview your puzzle.")
 
 
@@ -272,7 +246,6 @@ with manual_tab:
         else:
             st.session_state["current_puzzle"] = sanitized_grid
             st.session_state["puzzle_source"] = "Manual entry"
-            st.session_state["killer_cages"] = None
             st.success("Got it! Puzzle updated below.")
 
 
@@ -281,11 +254,6 @@ with generate_tab:
     generator_col, preview_col = st.columns([1.3, 1])
 
     with generator_col:
-        puzzle_kind = st.radio(
-            "Pick a puzzle style",
-            options=["Classic Sudoku", "Killer Sudoku"],
-            horizontal=True,
-        )
         difficulty = st.select_slider(
             "Select difficulty",
             options=["Easy", "Medium", "Hard"],
@@ -296,30 +264,18 @@ with generate_tab:
     with preview_col:
         st.markdown("**Latest selection**")
         st.markdown(
-            f"- Style: {puzzle_kind}\n- Difficulty: {difficulty}"
+            f"- Style: Classic Sudoku\n- Difficulty: {difficulty}"
         )
-        if puzzle_kind == "Killer Sudoku":
-            st.markdown(
-                '<span class="killer-badge">Killer mode</span> Cages feature sum targets. Solver coming soon! ',
-                unsafe_allow_html=True,
-            )
 
     if generate_button:
-        if puzzle_kind == "Classic Sudoku":
-            with st.spinner("Generating puzzle..."):
-                chosen_grid = generate_sudoku(difficulty)
+        with st.spinner("Generating puzzle..."):
+            chosen_grid = generate_sudoku(difficulty)
 
-            st.session_state["current_puzzle"] = chosen_grid
-            st.session_state["killer_cages"] = None
-            st.session_state["puzzle_source"] = CLASSIC_GENERATOR_SOURCE.format(
-                difficulty=difficulty
-            )
-            st.success("Classic puzzle generated locally! Preview below.")
-        else:
-            st.session_state["current_puzzle"] = SAMPLE_KILLER_PUZZLE["grid"]
-            st.session_state["puzzle_source"] = f"Generated • Killer • {difficulty}"
-            st.session_state["killer_cages"] = SAMPLE_KILLER_PUZZLE["cages"]
-            st.success("Killer puzzle scaffold in place. Cages listed below.")
+        st.session_state["current_puzzle"] = chosen_grid
+        st.session_state["puzzle_source"] = CLASSIC_GENERATOR_SOURCE.format(
+            difficulty=difficulty
+        )
+        st.success("Classic puzzle generated locally! Preview below.")
 
 
 # --- Preview & Meta -------------------------------------------------------
@@ -327,18 +283,12 @@ st.divider()
 
 current = st.session_state.get("current_puzzle")
 source = st.session_state.get("puzzle_source")
-cages = st.session_state.get("killer_cages")
 
 if current:
     st.subheader("Puzzle preview")
     if source:
         st.caption(source)
     render_grid(current)
-    if cages:
-        st.markdown("**Killer cages (prototype)**")
-        for cage in cages:
-            coords = ", ".join(f"r{r + 1}c{c + 1}" for r, c in cage["cells"])
-            st.write(f"Sum {cage['sum']}: {coords}")
 else:
     st.info("Upload, enter, or generate a puzzle to see it rendered here.")
 
