@@ -74,8 +74,8 @@ def _count_solutions(board: Board, limit: int = 2) -> int:
     return solutions
 
 
-def generate_sudoku(difficulty: str = "Easy") -> Grid:
-    """Return a Sudoku puzzle with a unique solution tuned to the given difficulty."""
+def generate_sudoku(difficulty: str = "Easy") -> tuple[Grid, Grid]:
+    """Return a Sudoku puzzle and its solution tuned to the given difficulty."""
 
     label = difficulty.title()
     target_clues = _DIFFICULTY_TARGETS.get(label, _DIFFICULTY_TARGETS["Easy"])
@@ -119,4 +119,5 @@ def generate_sudoku(difficulty: str = "Easy") -> Grid:
             break
 
     grid: Grid = [[str(value) if value else "" for value in row] for row in puzzle]
-    return grid
+    solution: Grid = [[str(value) for value in row] for row in solved]
+    return grid, solution
