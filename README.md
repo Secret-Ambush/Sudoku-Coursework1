@@ -17,7 +17,3 @@ source .venv/bin/activate            # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
-
-### Puzzle Generation
-
-`sudoku_generator.py` contains the backtracking-based generator used by the app. Tweak the clue targets there if you want to calibrate difficulty further.
