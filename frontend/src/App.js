@@ -381,9 +381,12 @@ function App() {
                 <div className="comparison-item">
                   <span>Efficiency Ratio:</span>
                   <span>
-                    {algorithmComparison.efficiency_ratio === Infinity ? '∞' : 
+                    {(algorithmComparison.efficiency_ratio === Infinity ||
+                      algorithmComparison.efficiency_ratio === null ||
+                      algorithmComparison.efficiency_ratio === 'inf' ||
+                      algorithmComparison.efficiency_ratio === 'infinity') ? '∞' :
                      algorithmComparison.efficiency_ratio === 0 ? '0' :
-                     algorithmComparison.efficiency_ratio.toFixed(2)}x
+                     Number.isFinite(algorithmComparison.efficiency_ratio) ? algorithmComparison.efficiency_ratio.toFixed(2) : '-'}x
                   </span>
                 </div>
               </div>
