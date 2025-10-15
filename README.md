@@ -1,19 +1,30 @@
-# Sudoku Playground UI
+# 🧩 Sudoku Solver - React + Python Flask
 
-Prototype Streamlit app for experimenting with classic and killer Sudoku inputs.
+Application for experimenting with classic easy, medium and hard 9x9 Sudoku grids.
 
 ## Features
 
-- Upload 9x9 puzzles from `.csv` or `.txt` files (zero/blank denotes empty cells).
-- Type directly into a stylised 9x9 grid with subgrid borders.
-- Generate classic puzzles locally, tuned for easy/medium/hard clue counts, and preview a killer Sudoku scaffold.
-- Preview panel renders the active grid with bold 3×3 blocks.
+- **Interactive Sudoku Grid**: Click and type directly into cells, just like the image you wanted!
+- **AI-Powered Solving**: Uses Arc Consistency and Backtracking with Pruning algorithms 
+- **Puzzle Generation**: Generate puzzles of different difficulties (Easy, Medium, Hard)
+- **Real-time Validation**: Check your solution as you play
 
 ## Getting Started
 
-```bash
-python -m venv .venv
-source .venv/bin/activate            # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-streamlit run app.py
-```
+1. Run the setup script:
+   ```bash
+   ./setup.sh
+   ```
+
+2. Start the backend (Terminal 1):
+   ```bash
+   cd backend
+   source venv/bin/activate
+   python app.py
+   ```
+
+3. Start the frontend (Terminal 2):
+   ```bash
+   cd frontend
+   npm start
+   ```
