@@ -1,7 +1,7 @@
 """
 Flask backend for Sudoku React frontend
 """
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, make_response
 from flask_cors import CORS
 import sys
 import os
@@ -16,10 +16,17 @@ from Pruning_Implementation.pruning_demo import PruningSudokuSolver
 from sudoku_generator import generate_sudoku
 
 app = Flask(__name__)
-CORS(app, origins=[
-    "http://localhost:3000",
-    "https://sudoku-coursework1.vercel.app"
-], supports_credentials=True)  # Enable CORS for React frontend
+CORS(app)  # Enable CORS for all origins (temporary fix)
+
+# Handle preflight requests explicitly
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = make_response()
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add('Access-Control-Allow-Headers', "*")
+        response.headers.add('Access-Control-Allow-Methods', "*")
+        return response
 
 @app.route('/api/solve', methods=['POST'])
 def solve_sudoku():
