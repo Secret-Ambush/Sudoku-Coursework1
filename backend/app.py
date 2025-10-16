@@ -16,17 +16,7 @@ from Pruning_Implementation.pruning_demo import PruningSudokuSolver
 from sudoku_generator import generate_sudoku
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all origins (temporary fix)
-
-# Handle preflight requests explicitly
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        response = make_response()
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add('Access-Control-Allow-Headers', "*")
-        response.headers.add('Access-Control-Allow-Methods', "*")
-        return response
+CORS(app, resources={r"/api/*": {"origins": "https://sudoku-coursework1.vercel.app/"}})
 
 @app.route('/api/solve', methods=['POST'])
 def solve_sudoku():
