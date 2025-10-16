@@ -9,4 +9,4 @@ build: cd frontend && npm run build
 output: frontend/build
 
 # Environment variables (you'll need to set these in Vercel dashboard)
-# REACT_APP_API_URL=https://your-backend-url.railway.app/api
+REACT_APP_API_URL=https://sudoku-backend-production.up.railway.app/api
