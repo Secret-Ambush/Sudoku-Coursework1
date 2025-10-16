@@ -32,9 +32,12 @@ function App() {
     setIsGenerating(true);
     setMessage('');
     try {
+      console.log('Generating puzzle with API URL:', API_BASE_URL);
       const response = await axios.post(`${API_BASE_URL}/generate`, {
         difficulty: difficulty
       });
+      
+      console.log('Generate response:', response.data);
       
       if (response.data.success) {
         setGrid(response.data.puzzle);
@@ -45,6 +48,8 @@ function App() {
         setAlgorithmComparison(null);
       }
     } catch (error) {
+      console.error('Generate error:', error);
+      console.error('Error response:', error.response);
       setMessage(`Error generating puzzle: ${error.response?.data?.error || error.message}`);
     } finally {
       setIsGenerating(false);
