@@ -16,7 +16,10 @@ from Pruning_Implementation.pruning_demo import PruningSudokuSolver
 from sudoku_generator import generate_sudoku
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all origins (for debugging)
+CORS(app, origins=[
+    "http://localhost:3000",
+    "https://sudoku-coursework1.vercel.app"
+], supports_credentials=True)  # Enable CORS for React frontend
 
 @app.route('/api/solve', methods=['POST'])
 def solve_sudoku():
