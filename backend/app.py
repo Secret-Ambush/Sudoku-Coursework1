@@ -6,7 +6,7 @@ from flask_cors import CORS
 import sys
 import os
 import pandas as pd
-from io import StringIO
+from io import StringIO 
 
 # Add the parent directory to the path to import the sudoku solver
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
