@@ -16,7 +16,7 @@ from Pruning_Implementation.pruning_demo import PruningSudokuSolver
 from sudoku_generator import generate_sudoku
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "https://sudoku-coursework1.vercel.app/"}})
+CORS(app, resources={r"/api/*": {"origins": "https://sudoku-coursework1-p3xfjlrjg-secret-ambushs-projects.vercel.app/"}})
 
 @app.route('/api/solve', methods=['POST'])
 def solve_sudoku():
