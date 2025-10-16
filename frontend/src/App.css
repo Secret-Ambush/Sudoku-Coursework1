@@ -113,6 +113,16 @@
   color: white;
 }
 
+.btn-warning {
+  background: linear-gradient(45deg, #FFC107, #FF8F00);
+  color: white;
+}
+
+.btn-warning:hover {
+  background: linear-gradient(45deg, #FFB300, #FF6F00);
+  transform: translateY(-2px);
+}
+
 .upload-section {
   display: flex;
   flex-direction: column;

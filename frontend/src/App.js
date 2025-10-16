@@ -16,16 +16,25 @@ function App() {
   const [solveStats, setSolveStats] = useState(null);
   const [algorithmComparison, setAlgorithmComparison] = useState(null);
 
-  // Initialize empty grid
-  const initializeEmptyGrid = useCallback(() => {
+  // Reset to original puzzle (clear user inputs)
+  const resetToOriginal = () => {
+    setGrid([...originalGrid]);
+    setSelectedCell(null);
+    setMessage('Reset to original puzzle');
+    setSolveStats(null);
+    setAlgorithmComparison(null);
+  };
+
+  // Clear grid completely (empty grid)
+  const clearGrid = () => {
     const emptyGrid = Array(9).fill().map(() => Array(9).fill(''));
     setGrid(emptyGrid);
     setOriginalGrid(emptyGrid);
     setSelectedCell(null);
-    setMessage('');
+    setMessage('Grid cleared');
     setSolveStats(null);
     setAlgorithmComparison(null);
-  }, []);
+  };
 
   // Generate new puzzle
   const generatePuzzle = async () => {
@@ -267,7 +276,14 @@ function App() {
             </button>
             
             <button 
-              onClick={initializeEmptyGrid}
+              onClick={resetToOriginal}
+              className="btn btn-warning"
+            >
+              Reset
+            </button>
+            
+            <button 
+              onClick={clearGrid}
               className="btn btn-secondary"
             >
               Clear Grid
