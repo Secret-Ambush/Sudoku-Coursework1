@@ -1,6 +1,3 @@
-"""
-Flask backend for Sudoku React frontend
-"""
 from flask import Flask, request, jsonify, send_from_directory, make_response
 from flask_cors import CORS
 import sys

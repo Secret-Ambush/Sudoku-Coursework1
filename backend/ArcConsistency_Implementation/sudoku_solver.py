@@ -1,15 +1,8 @@
 """
 Sudoku Solver using Backtracking with Arc Consistency
 
-This module implements a constraint satisfaction problem (CSP) solver for Sudoku
-using backtracking with arc consistency (AC-3 algorithm) for constraint propagation.
-
-Key features:
-- Arc consistency constraint propagation using AC-3 algorithm
 - Backtracking with intelligent variable ordering (MRV heuristic)
 - Value ordering using Least Constraining Value (LCV) heuristic
-- Forward checking and constraint propagation
-- Comprehensive validation and error handling
 """
 
 from __future__ import annotations
@@ -21,21 +14,9 @@ import time
 
 
 class SudokuSolver:
-    """
-    A Sudoku solver using backtracking with arc consistency.
-    
-    This solver treats Sudoku as a Constraint Satisfaction Problem (CSP) where:
-    - Variables: Empty cells in the grid
-    - Domains: Possible values (1-9) for each variable
-    - Constraints: Row, column, and 3x3 box constraints
-    """
-    
     def __init__(self, grid: List[List[str]]):
         """
-        Initialize the solver with a Sudoku grid.
-        
-        Args:
-            grid: 9x9 grid where empty cells are represented as empty strings or '0'
+        Initialize the solver with a 9x9 Sudoku grid.
         """
         self.grid = self._normalize_grid(grid)
         self.size = 9
@@ -113,10 +94,7 @@ class SudokuSolver:
     
     def _get_constraints(self) -> List[Tuple[Tuple[int, int], Tuple[int, int]]]:
         """
-        Generate all constraint pairs for the Sudoku CSP.
-        
-        Returns:
-            List of constraint pairs (variable1, variable2) where variable1 != variable2
+        List of constraint pairs (variable1, variable2) where variable1 != variable2
         """
         constraints = []
         
