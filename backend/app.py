@@ -8,8 +8,8 @@ from io import StringIO
 # Add the parent directory to the path to import the sudoku solver
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from backend.ArcConsistency_Implementation.ac3_sudoku_solver import SudokuSolver
-from backend.Pruning_Implementation.pruning_sudoku_solver import PruningSudokuSolver
+from ArcConsistency_Implementation.ac3_sudoku_solver import SudokuSolver
+from Pruning_Implementation.pruning_sudoku_solver import PruningSudokuSolver
 from sudoku_generator import generate_sudoku
 
 app = Flask(__name__)
