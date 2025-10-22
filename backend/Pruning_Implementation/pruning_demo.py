@@ -243,10 +243,8 @@ def solve_sudoku_pruning(grid: List[List[str]]) -> Tuple[bool, List[List[str]], 
     return solver.solve()
 
 
-def create_test_puzzles():
-    """Create various test puzzles of different difficulties."""
-    
-    # Easy puzzle (many given numbers) - same as app1.py
+def create_test_puzzles():    
+    # Easy puzzle
     easy_puzzle = [
         ["5", "3", "", "", "7", "", "", "", ""],
         ["6", "", "", "1", "9", "5", "", "", ""],
@@ -258,65 +256,37 @@ def create_test_puzzles():
         ["", "", "", "4", "1", "9", "", "", "5"],
         ["", "", "", "", "8", "", "", "7", "9"]
     ]
-    
+
     # Medium puzzle
     medium_puzzle = [
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "3", "", "8", "5"],
-        ["", "", "", "", "1", "", "", "", ""],
-        ["", "", "", "", "8", "", "", "", ""],
-        ["", "", "", "", "", "1", "", "", ""],
-        ["", "", "", "", "2", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""]
+        ["", "6", "", "1", "", "4", "", "5", ""],
+        ["", "", "8", "3", "", "5", "6", "", ""],
+        ["2", "", "", "", "", "", "", "", "1"],
+        ["8", "", "", "4", "", "7", "", "", "6"],
+        ["", "", "6", "", "8", "", "3", "", ""],
+        ["7", "", "", "9", "", "1", "", "", "4"],
+        ["5", "", "", "", "", "", "", "", "2"],
+        ["", "", "7", "2", "", "6", "9", "", ""],
+        ["", "4", "", "5", "", "8", "", "7", ""]
     ]
-    
-    # Hard puzzle (few given numbers)
+
+    # Hard puzzle
     hard_puzzle = [
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""]
+        ["", "", "5", "3", "", "", "", "", ""],
+        ["8", "", "", "", "", "", "", "2", ""],
+        ["", "7", "", "", "1", "", "5", "", ""],
+        ["4", "", "", "", "", "5", "3", "", ""],
+        ["", "1", "", "", "7", "", "", "", "6"],
+        ["", "", "3", "2", "", "", "", "8", ""],
+        ["", "6", "", "5", "", "", "", "", "9"],
+        ["", "", "4", "", "", "", "", "3", ""],
+        ["", "", "", "", "", "9", "7", "", ""]
     ]
-    
-    # Very hard puzzle (minimal clues)
-    very_hard_puzzle = [
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""]
-    ]
-    
-    # Invalid puzzle (conflicting)
-    invalid_puzzle = [
-        ["1", "1", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""],
-        ["", "", "", "", "", "", "", "", ""]
-    ]
-    
+
     return {
         "Easy": easy_puzzle,
         "Medium": medium_puzzle,
         "Hard": hard_puzzle,
-        "Very Hard": very_hard_puzzle,
-        "Invalid": invalid_puzzle
     }
 
 
@@ -451,90 +421,41 @@ def compare_with_arc_consistency():
     
     # Test arc consistency solver (if available)
     print(f"\n{'='*30} ARC CONSISTENCY SOLVER {'='*30}")
-    try:
-        import sys
-        import os
-        sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ArcConsistency_Implementation'))
-        from sudoku_solver import solve_sudoku as solve_sudoku_ac
+    import sys
+    from pathlib import Path
+
+    backend_dir = Path(__file__).resolve().parent.parent
+    if str(backend_dir) not in sys.path:
+        sys.path.insert(0, str(backend_dir))
         
-        success_ac, solution_ac, stats_ac = solve_sudoku_ac(test_puzzle)
-        
-        if success_ac:
-            print(f"✓ Solved successfully!")
-            print(f"Time: {stats_ac['time']:.4f} seconds")
-            print(f"Assignments: {stats_ac['assignments']}")
-            print(f"Backtracks: {stats_ac['backtracks']}")
-            print(f"Efficiency: {stats_ac['assignments']/(stats_ac['assignments']+stats_ac['backtracks'])*100:.1f}%")
+    from ArcConsistency_Implementation.sudoku_solver import solve_sudoku
+    
+    success_ac, solution_ac, stats_ac = solve_sudoku(test_puzzle)
+    
+    if success_ac:
+        print(f"✓ Solved successfully!")
+        print(f"Time: {stats_ac['time']:.4f} seconds")
+        print(f"Assignments: {stats_ac['assignments']}")
+        print(f"Backtracks: {stats_ac['backtracks']}")
+        denom = (stats_ac['assignments']+stats_ac['backtracks'])
+        if denom!=0:
+            print(f"Efficiency: {stats_ac['assignments']/denom*100:.1f}%")
         else:
-            print("✗ Failed to solve")
-        
-        # Comparison summary
-        print(f"\n{'='*30} COMPARISON SUMMARY {'='*30}")
-        if success_pruning and success_ac:
-            print(f"Both solvers found solutions!")
-            print(f"Pruning solver: {stats_pruning['time']:.4f}s, {stats_pruning['assignments']} assignments")
-            print(f"AC-3 solver:   {stats_ac['time']:.4f}s, {stats_ac['assignments']} assignments")
-            
-            if stats_pruning['time'] < stats_ac['time']:
-                print(f"Pruning solver was {stats_ac['time']/stats_pruning['time']:.2f}x faster!")
-            else:
-                print(f"AC-3 solver was {stats_pruning['time']/stats_ac['time']:.2f}x faster!")
-        
-    except ImportError:
-        print("Arc consistency solver not available for comparison")
-        print("Make sure ArcConsistency_Implementation/sudoku_solver.py exists")
-
-
-def interactive_demo():
-    """Interactive demo where user can input their own puzzle."""
-    print(f"\n{'='*60}")
-    print("INTERACTIVE DEMO - PRUNING SOLVER")
-    print(f"{'='*60}")
-    
-    print("Enter your Sudoku puzzle (9x9 grid):")
-    print("Use numbers 1-9 for given cells, empty string or 0 for empty cells")
-    print("Enter each row separated by commas, or press Enter for empty row")
-    
-    puzzle = []
-    for i in range(9):
-        while True:
-            try:
-                row_input = input(f"Row {i+1}: ").strip()
-                if not row_input:
-                    row = [""] * 9
-                else:
-                    row = [cell.strip() for cell in row_input.split(",")]
-                    if len(row) != 9:
-                        print("Please enter exactly 9 cells per row")
-                        continue
-                puzzle.append(row)
-                break
-            except KeyboardInterrupt:
-                print("\nExiting...")
-                return
-            except Exception as e:
-                print(f"Error: {e}")
-                print("Please try again")
-    
-    solver = PruningSudokuSolver(puzzle)
-    
-    print(f"\nYour puzzle:")
-    solver.print_grid(puzzle, "Your Puzzle")
-    
-    if not solver.is_valid_sudoku():
-        print("✗ Invalid puzzle! Please check for conflicts.")
-        return
-    
-    print("\nSolving...")
-    success, solution, stats = solver.solve()
-    
-    if success:
-        solver.print_grid(solution, "Solution")
-        print(f"\nSolved in {stats['time']:.4f} seconds!")
-        print(f"Made {stats['assignments']} assignments with {stats['backtracks']} backtracks")
+            print(f"Efficiency: undefined")
     else:
-        print("✗ No solution found!")
-
+        print("✗ Failed to solve")
+    
+    # Comparison summary
+    print(f"\n{'='*30} COMPARISON SUMMARY {'='*30}")
+    if success_pruning and success_ac:
+        print(f"Both solvers found solutions!")
+        print(f"Pruning solver: {stats_pruning['time']:.4f}s, {stats_pruning['assignments']} assignments")
+        print(f"AC-3 solver:   {stats_ac['time']:.4f}s, {stats_ac['assignments']} assignments")
+        
+        if stats_pruning['time'] < stats_ac['time']:
+            print(f"Pruning solver was {stats_ac['time']/stats_pruning['time']:.2f}x faster!")
+        else:
+            print(f"AC-3 solver was {stats_pruning['time']/stats_ac['time']:.2f}x faster!")
 
 if __name__ == "__main__":
     try:
@@ -542,21 +463,6 @@ if __name__ == "__main__":
         test_puzzle_solving()
         performance_comparison()
         compare_with_arc_consistency()
-        
-        # Ask if user wants interactive demo
-        print(f"\n{'='*60}")
-        response = input("Would you like to try the interactive demo? (y/n): ").strip().lower()
-        if response in ['y', 'yes']:
-            interactive_demo()
-        
-        print(f"\n{'='*60}")
-        print("DEMO COMPLETE!")
-        print("The pruning-based Sudoku solver uses:")
-        print("• Backtracking with optimized cell finding")
-        print("• Efficient validity checking")
-        print("• No constraint propagation (pure backtracking)")
-        print("• Performance optimized for speed")
-        print(f"{'='*60}")
         
     except KeyboardInterrupt:
         print("\n\nDemo interrupted by user. Goodbye!")

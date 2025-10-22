@@ -1,8 +1,6 @@
 """
-Sudoku Solver using Backtracking with Maintain Arc Consistency (MAC-3)
-Refactored for efficiency — same API and outputs as original version.
+Sudoku Solver using Backtracking with Arc Consistency (AC-3)
 """
-
 from __future__ import annotations
 import copy
 from collections import deque, defaultdict
@@ -90,7 +88,7 @@ class SudokuSolver:
         return revised
 
     def _ac3(self, queue: deque, domains: Dict[Tuple[int, int], Set[int]]) -> bool:
-        """Perform AC-3 on the current queue only (local MAC propagation)."""
+        """Perform AC-3 on the current queue only."""
         while queue:
             xi, xj = queue.popleft()
             if self._revise(xi, xj, domains):
@@ -194,50 +192,6 @@ class SudokuSolver:
             "solvable": True
         }
         return True, solution_grid, stats
-
-    # ------------------------------
-    # Helpers for validation/printing
-    # ------------------------------
-
-    def is_valid_sudoku(self, grid: Optional[List[List[str]]] = None) -> bool:
-        if grid is None:
-            grid = self.grid
-        board = self._grid_to_board(grid)
-        for r in range(self.size):
-            vals = [v for v in board[r] if v != 0]
-            if len(vals) != len(set(vals)):
-                return False
-        for c in range(self.size):
-            vals = [board[r][c] for r in range(self.size) if board[r][c] != 0]
-            if len(vals) != len(set(vals)):
-                return False
-        for br in range(0, self.size, 3):
-            for bc in range(0, self.size, 3):
-                vals = []
-                for r in range(br, br + 3):
-                    for c in range(bc, bc + 3):
-                        if board[r][c] != 0:
-                            vals.append(board[r][c])
-                if len(vals) != len(set(vals)):
-                    return False
-        return True
-
-    def print_grid(self, grid: Optional[List[List[str]]] = None, title: str = "Sudoku Grid"):
-        if grid is None:
-            grid = self.grid
-        print(f"\n{title}:")
-        print("+" + "-" * 25 + "+")
-        for i, row in enumerate(grid):
-            print("|", end="")
-            for j, cell in enumerate(row):
-                if j % 3 == 0 and j > 0:
-                    print(" |", end="")
-                print(f" {cell if cell else '.'}", end="")
-            print(" |")
-            if (i + 1) % 3 == 0 and i < 8:
-                print("|" + "-" * 7 + "|" + "-" * 7 + "|" + "-" * 7 + "|")
-        print("+" + "-" * 25 + "+")
-
 
 def solve_sudoku(grid: List[List[str]]) -> Tuple[bool, List[List[str]], Dict[str, Any]]:
     solver = SudokuSolver(grid)
