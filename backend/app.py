@@ -8,8 +8,8 @@ from io import StringIO
 # Add the parent directory to the path to import the sudoku solver
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ArcConsistency_Implementation.sudoku_solver import SudokuSolver
-from Pruning_Implementation.pruning_demo import PruningSudokuSolver
+from backend.ArcConsistency_Implementation.ac3_sudoku_solver import SudokuSolver
+from backend.Pruning_Implementation.pruning_sudoku_solver import PruningSudokuSolver
 from sudoku_generator import generate_sudoku
 
 app = Flask(__name__)
@@ -235,14 +235,11 @@ def upload_csv():
             for j in range(9):
                 cell_value = df.iat[i, j]
                 
-                # Handle different data types
                 if pd.isna(cell_value) or cell_value == '' or str(cell_value).strip() == '':
                     row.append('')
                 else:
-                    # Convert to string and strip whitespace
                     cell_str = str(cell_value).strip()
                     
-                    # Handle float values like "2.0" -> "2"
                     if '.' in cell_str and cell_str.replace('.', '').isdigit():
                         try:
                             float_val = float(cell_str)
@@ -291,6 +288,6 @@ def serve_react_app(path):
 
 if __name__ == '__main__':
     import time
-    # Use Railway's PORT environment variable, fallback to 8000 for local development
+    # Using Railway's PORT environment variable, fallback to 8000 for local development
     port = int(os.environ.get('PORT', 8000))
     app.run(debug=True, host='0.0.0.0', port=port)

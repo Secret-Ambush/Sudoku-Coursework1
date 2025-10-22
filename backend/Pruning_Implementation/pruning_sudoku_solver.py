@@ -1,36 +1,10 @@
-#!/usr/bin/env python3
-"""
-CLI Demo for Pruning-Based Sudoku Solver
-
-This script demonstrates the pruning-based Sudoku solver (from app1.py) with
-performance tracking including time, number of backtracks, and assignments.
-
-The solver uses basic backtracking with pruning techniques:
-- Optimized cell finding
-- Efficient validity checking
-- No arc consistency (for comparison with AC-3 implementation)
-"""
-
 import time
 import copy
 from typing import List, Tuple, Optional, Dict, Any
 
 
-class PruningSudokuSolver:
-    """
-    A Sudoku solver using backtracking with pruning techniques.
-    
-    This solver implements the same algorithm as app1.py but without pygame
-    for CLI testing and performance analysis.
-    """
-    
+class PruningSudokuSolver: 
     def __init__(self, grid: List[List[str]]):
-        """
-        Initialize the solver with a Sudoku grid.
-        
-        Args:
-            grid: 9x9 grid where empty cells are represented as empty strings or '0'
-        """
         self.grid = self._normalize_grid(grid)
         self.size = 9
         
@@ -50,7 +24,6 @@ class PruningSudokuSolver:
         self.start_time = None
         
     def _normalize_grid(self, grid: List[List[str]]) -> List[List[str]]:
-        """Normalize grid input to handle various formats."""
         normalized = []
         for row in grid:
             normalized_row = []
@@ -63,7 +36,6 @@ class PruningSudokuSolver:
         return normalized
     
     def _grid_to_board(self, grid: List[List[str]]) -> List[List[int]]:
-        """Convert string grid to integer board."""
         board = []
         for row in grid:
             board_row = []
@@ -89,7 +61,6 @@ class PruningSudokuSolver:
         return grid
     
     def find_empty_cell(self) -> Optional[Tuple[int, int]]:
-        """Find the next empty cell efficiently in a single pass."""
         for r in range(9):
             for c in range(9):
                 if self.board[r][c] == 0:
@@ -97,7 +68,6 @@ class PruningSudokuSolver:
         return None
     
     def is_valid_optimized(self, board: List[List[int]], row: int, col: int, num: int) -> bool:
-        """Optimized validity check using efficient lookups."""
         # Check row
         if num in board[row]:
             return False
@@ -139,12 +109,6 @@ class PruningSudokuSolver:
         return False
     
     def solve(self) -> Tuple[bool, List[List[str]], Dict[str, Any]]:
-        """
-        Solve the Sudoku puzzle.
-        
-        Returns:
-            Tuple of (success, solution_grid, statistics)
-        """
         self.start_time = time.time()
         self.assignments = 0
         self.backtracks = 0
@@ -169,15 +133,6 @@ class PruningSudokuSolver:
         return success, solution_grid, stats
     
     def is_valid_sudoku(self, grid: Optional[List[List[str]]] = None) -> bool:
-        """
-        Validate if a Sudoku grid is valid (no conflicts).
-        
-        Args:
-            grid: Grid to validate (uses current grid if None)
-            
-        Returns:
-            True if valid, False otherwise
-        """
         if grid is None:
             grid = self.grid
         
@@ -209,7 +164,6 @@ class PruningSudokuSolver:
         return True
     
     def print_grid(self, grid: Optional[List[List[str]]] = None, title: str = "Sudoku Grid"):
-        """Print a Sudoku grid in a formatted way."""
         if grid is None:
             grid = self.grid
         
@@ -382,7 +336,6 @@ def performance_comparison():
     for result in results:
         print(f"{result['difficulty']:<12} {result['time']:<10.4f} {result['assignments']:<12} {result['backtracks']:<10} {result['efficiency']:<10.2%}")
 
-
 def compare_with_arc_consistency():
     """Compare pruning-based solver with arc consistency solver."""
     print(f"\n{'='*60}")
@@ -428,7 +381,7 @@ def compare_with_arc_consistency():
     if str(backend_dir) not in sys.path:
         sys.path.insert(0, str(backend_dir))
         
-    from ArcConsistency_Implementation.sudoku_solver import solve_sudoku
+    from Sudoku.backend.ArcConsistency_Implementation.ac3_sudoku_solver import solve_sudoku
     
     success_ac, solution_ac, stats_ac = solve_sudoku(test_puzzle)
     
