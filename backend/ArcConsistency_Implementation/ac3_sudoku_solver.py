@@ -137,6 +137,7 @@ class SudokuSolver:
     # ------------------------------
 
     def _select_unassigned_variable(self, domains: Dict[Tuple[int, int], Set[int]]) -> Optional[Tuple[int, int]]:
+        """Minimum Remaining Values heuristic."""
         unassigned = [(cell, len(dom)) for cell, dom in domains.items() if len(dom) > 1]
         if not unassigned:
             return None

@@ -1,5 +1,3 @@
-# Vercel deployment configuration for Sudoku Solver
-
 # Build command for React frontend
 build: frontend
 install: cd frontend && npm install
@@ -7,6 +5,3 @@ build: cd frontend && npm run build
 
 # Output directory
 output: frontend/build
-
-# Environment variables (you'll need to set these in Vercel dashboard)
-REACT_APP_API_URL=https://sudoku-backend-production.up.railway.app/api
